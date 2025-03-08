@@ -1,0 +1,11 @@
+Model Information:
+* title:	Seesaws
+* source:	https://sketchfab.com/3d-models/seesaws-dbc317e5859a4ce9abd545be5a668a3f
+* author:	LostBoyz2078 (https://sketchfab.com/LostModels2025)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Seesaws" (https://sketchfab.com/3d-models/seesaws-dbc317e5859a4ce9abd545be5a668a3f) by LostBoyz2078 (https://sketchfab.com/LostModels2025) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

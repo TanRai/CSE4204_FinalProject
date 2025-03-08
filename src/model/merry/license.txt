@@ -1,0 +1,11 @@
+Model Information:
+* title:	Old Roundabout / Merry-go-round
+* source:	https://sketchfab.com/3d-models/old-roundabout-merry-go-round-7c236a86366b41b9b037f3a279381101
+* author:	crow (https://sketchfab.com/crow.bite)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Old Roundabout / Merry-go-round" (https://sketchfab.com/3d-models/old-roundabout-merry-go-round-7c236a86366b41b9b037f3a279381101) by crow (https://sketchfab.com/crow.bite) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
