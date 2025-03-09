@@ -24,13 +24,11 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
 scene.add(ambientLight);
 
 const concreteTexture = new THREE.TextureLoader().load(
-  "src/textures/concrete.jpg",
-  () => {
-    concreteTexture.wrapS = THREE.RepeatWrapping;
-    concreteTexture.wrapT = THREE.RepeatWrapping;
-    concreteTexture.repeat.set(16, 1); // Repeat 4 times in both directions
-  }
+  "src/textures/concrete.jpg"
 );
+concreteTexture.wrapS = THREE.RepeatWrapping;
+concreteTexture.wrapT = THREE.RepeatWrapping;
+concreteTexture.repeat.set(16, 1); // Repeat 4 times in both directions
 const buildingTexture = new THREE.TextureLoader().load(
   "src/textures/building.jpg"
 );
@@ -38,14 +36,11 @@ const buildingTexture2 = new THREE.TextureLoader().load(
   "src/textures/building2.jpg"
 );
 const roofTexture = new THREE.TextureLoader().load("src/textures/roof.jpg");
-const grassTexture = new THREE.TextureLoader().load(
-  "src/textures/grass.jpg",
-  () => {
-    grassTexture.wrapS = THREE.RepeatWrapping;
-    grassTexture.wrapT = THREE.RepeatWrapping;
-    grassTexture.repeat.set(16, 16); // Repeat 4 times in both directions
-  }
-);
+const grassTexture = new THREE.TextureLoader().load("src/textures/grass.jpg");
+grassTexture.wrapS = THREE.RepeatWrapping;
+grassTexture.wrapT = THREE.RepeatWrapping;
+grassTexture.repeat.set(16, 16);
+const roadTexture = new THREE.TextureLoader().load("src/textures/road.jpg");
 
 const groundGeometry = new THREE.PlaneGeometry(50, 50);
 const groundMaterial = new THREE.MeshStandardMaterial({
@@ -57,12 +52,38 @@ ground.rotation.x = -Math.PI / 2;
 ground.receiveShadow = true;
 scene.add(ground);
 
+const roadGeometry = new THREE.PlaneGeometry(36, 5);
+const roadMaterial = new THREE.MeshStandardMaterial({
+  map: roadTexture,
+});
+
+const road = new THREE.Mesh(roadGeometry, roadMaterial);
+road.position.set(0, 0.01, 10);
+road.rotation.x = -Math.PI / 2;
+road.rotation.z = Math.PI / 2;
+road.receiveShadow = true;
+scene.add(road);
+
+const road2Geometry = new THREE.PlaneGeometry(50, 5);
+const road2Material = new THREE.MeshStandardMaterial({
+  map: roadTexture,
+});
+
+const road2 = new THREE.Mesh(road2Geometry, road2Material);
+
+road2.rotation.x = -Math.PI / 2;
+road2.rotation.z = -Math.PI;
+road2.position.set(0, 0.01, -10);
+road2.receiveShadow = true;
+scene.add(road2);
+
+
 // Define the wall geometry: 100 units wide, 10 units high
 const wallGeometry = new THREE.PlaneGeometry(50, 5);
 
 // Define the wall material: gray color, roughness 0.8, double-sided
 const wallMaterial = new THREE.MeshStandardMaterial({
-  map: concreteTexture
+  map: concreteTexture,
 });
 
 // Wall at x = 50 (right edge)
@@ -99,7 +120,7 @@ scene.add(wall4);
 
 // Building
 let buildingTextures = [
-  new THREE.MeshStandardMaterial({ map: buildingTexture }), 
+  new THREE.MeshStandardMaterial({ map: buildingTexture }),
   new THREE.MeshStandardMaterial({ map: buildingTexture2 }),
 ];
 
@@ -122,9 +143,23 @@ const roof = new THREE.Mesh(roofGeometry, roofMaterial);
 roof.position.set(2, 11, -1);
 roof.rotation.y = Math.PI / 4;
 roof.castShadow = true;
+roof.receiveShadow = true;
 building.add(roof);
 
-scene.add(building);
+building.position.set(0, 0, -16);
+
+const building2 = building.clone();
+building2.castShadow = true;
+
+building2.position.set(16, 0, -16);
+
+const building3 = building.clone();
+building3.castShadow = true;
+
+building3.position.set(-16, 0, -16);
+
+
+scene.add(building, building2, building3);
 
 const loader = new GLTFLoader();
 
@@ -135,6 +170,8 @@ loader.load(
     swing = gltf.scene;
     swing.scale.set(0.01, 0.01, 0.01);
     swing.position.set(14, 0, -1);
+    swing.castShadow = true;
+    swing.receiveShadow = true;
     scene.add(swing);
   },
   undefined,
@@ -152,6 +189,7 @@ loader.load(
     slide.scale.set(1.2, 1.2, 1.2);
     slide.position.set(-14, 0, 1);
     slide.castShadow = true;
+    slide.receiveShadow = true;
     scene.add(slide);
   },
   undefined,
@@ -167,8 +205,9 @@ loader.load(
   function (gltf) {
     merry = gltf.scene;
     merry.scale.set(2, 2, 2);
-    merry.position.set(0, 0, -14);
+    merry.position.set(-14, 0, 16);
     merry.castShadow = true;
+    merry.receiveShadow = true;
     scene.add(merry);
   },
   undefined,
@@ -184,8 +223,9 @@ loader.load(
   function (gltf) {
     seesaws = gltf.scene;
     seesaws.scale.set(0.01, 0.01, 0.01);
-    seesaws.position.set(0, 0, 14);
+    seesaws.position.set(16, 0, 14);
     seesaws.castShadow = true;
+    seesaws.receiveShadow = true; 
     scene.add(seesaws);
   },
   undefined,
@@ -212,12 +252,14 @@ window.addEventListener("click", function (event) {
 
   raycaster.setFromCamera(mouse, camera);
 
-  const buildingParts = [buildingWall, roof];
+  const buildingParts = [building, building2, building3];
   const intersects = raycaster.intersectObjects(buildingParts);
 
   if (intersects.length > 0) {
     currentTextureIndex = (currentTextureIndex + 1) % buildingTextures.length;
     buildingWall.material = buildingTextures[currentTextureIndex];
+    building2.children[0].material = buildingTextures[currentTextureIndex];
+    building3.children[0].material = buildingTextures[currentTextureIndex];
   }
 });
 
@@ -231,7 +273,7 @@ window.addEventListener("keyup", function (event) {
 });
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-directionalLight.position.set(10, 20, 10);
+// directionalLight.position.set(10, 20, 10);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
 
@@ -245,12 +287,12 @@ function animate() {
   requestAnimationFrame(animate);
 
   angle += 0.01;
-  directionalLight.position.x = 20 * Math.sin(angle);
-  directionalLight.position.z = 20 * Math.cos(angle);
+  directionalLight.position.x = 25 * Math.sin(angle);
+  directionalLight.position.z = 25 * Math.cos(angle);
 
-  time+= 0.01;
+  time += 0.01;
 
-  merry.rotation.y = time/2;
+  merry.rotation.y = time / 2;
 
   if (keyState["ArrowLeft"]) {
     cameraAngle -= 0.02;
