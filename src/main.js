@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0xaaaaaa, 1, 50);
+scene.fog = new THREE.Fog(0xaaaaaa, 1, 60);
 scene.background = new THREE.Color(0x87ceeb);
 
 const camera = new THREE.PerspectiveCamera(
@@ -31,11 +31,11 @@ const concreteTexture = new THREE.TextureLoader().load(
     concreteTexture.repeat.set(16, 1); // Repeat 4 times in both directions
   }
 );
-const wallTexture = new THREE.TextureLoader().load(
-  "src/textures/wall-texture.jpg"
+const buildingTexture = new THREE.TextureLoader().load(
+  "src/textures/building.jpg"
 );
-const wallTexture2 = new THREE.TextureLoader().load(
-  "src/textures/wall-texture2.jpg"
+const buildingTexture2 = new THREE.TextureLoader().load(
+  "src/textures/building2.jpg"
 );
 const roofTexture = new THREE.TextureLoader().load("src/textures/roof.jpg");
 const grassTexture = new THREE.TextureLoader().load(
@@ -62,8 +62,7 @@ const wallGeometry = new THREE.PlaneGeometry(50, 5);
 
 // Define the wall material: gray color, roughness 0.8, double-sided
 const wallMaterial = new THREE.MeshStandardMaterial({
-  map: concreteTexture,
-  side: THREE.DoubleSide, // Visible from both sides
+  map: concreteTexture
 });
 
 // Wall at x = 50 (right edge)
@@ -100,18 +99,18 @@ scene.add(wall4);
 
 // Building
 let buildingTextures = [
-  new THREE.MeshStandardMaterial({ map: wallTexture }), // brown
-  new THREE.MeshStandardMaterial({ map: wallTexture2 }), // gray
+  new THREE.MeshStandardMaterial({ map: buildingTexture }), 
+  new THREE.MeshStandardMaterial({ map: buildingTexture2 }),
 ];
 
 const building = new THREE.Group();
-const buildingGeometry = new THREE.BoxGeometry(5, 6, 5);
+const buildingGeometry = new THREE.BoxGeometry(5, 10, 5);
 let currentTextureIndex = 0;
 const buildingWall = new THREE.Mesh(
   buildingGeometry,
   buildingTextures[currentTextureIndex]
 );
-buildingWall.position.set(2, 1, -1);
+buildingWall.position.set(2, 5, -1);
 buildingWall.castShadow = true;
 buildingWall.receiveShadow = true;
 building.add(buildingWall);
@@ -120,7 +119,7 @@ building.add(buildingWall);
 const roofGeometry = new THREE.ConeGeometry(4, 2, 4);
 const roofMaterial = new THREE.MeshStandardMaterial({ map: roofTexture });
 const roof = new THREE.Mesh(roofGeometry, roofMaterial);
-roof.position.set(2, 5, -1);
+roof.position.set(2, 11, -1);
 roof.rotation.y = Math.PI / 4;
 roof.castShadow = true;
 building.add(roof);
@@ -136,7 +135,6 @@ loader.load(
     swing = gltf.scene;
     swing.scale.set(0.01, 0.01, 0.01);
     swing.position.set(14, 0, -1);
-    swing.castShadow = true;
     scene.add(swing);
   },
   undefined,
@@ -232,7 +230,7 @@ window.addEventListener("keyup", function (event) {
   keyState[event.code] = false;
 });
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 directionalLight.position.set(10, 20, 10);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
@@ -241,6 +239,7 @@ const cameraRadius = 20;
 let cameraAngle = 0;
 let cameraAngle2 = 0;
 let angle = 0;
+let time = 0;
 
 function animate() {
   requestAnimationFrame(animate);
@@ -248,6 +247,10 @@ function animate() {
   angle += 0.01;
   directionalLight.position.x = 20 * Math.sin(angle);
   directionalLight.position.z = 20 * Math.cos(angle);
+
+  time+= 0.01;
+
+  merry.rotation.y = time/2;
 
   if (keyState["ArrowLeft"]) {
     cameraAngle -= 0.02;
